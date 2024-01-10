@@ -16,14 +16,16 @@ def generate_launch_description():
         package='robot_state_publisher',
         executable='robot_state_publisher',
         parameters=[{'robot_description': Command(
-            ['xacro ', LaunchConfiguration('model')])}]
+            ['xacro ', LaunchConfiguration('model')])}],
+        emulate_tty=True
     )
 
     joint_state_publisher_node = launch_ros.actions.Node(
         package='joint_state_publisher',
         executable='joint_state_publisher',
         name='joint_state_publisher',
-        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}],
+        emulate_tty=True
     )
 
     rviz_node = launch_ros.actions.Node(
@@ -31,14 +33,16 @@ def generate_launch_description():
         executable='rviz2',
         name='rviz2',
         output='screen',
-        arguments=['-d', LaunchConfiguration('rvizconfig')]
+        arguments=['-d', LaunchConfiguration('rvizconfig')],
+        emulate_tty=True
     )
 
     spawn_entity = launch_ros.actions.Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
         arguments=['-entity', 'sam_bot', '-topic', 'robot_description'],
-        output='screen'
+        output='screen',
+        emulate_tty=True
     )
 
     robot_localization_node = launch_ros.actions.Node(
@@ -47,7 +51,8 @@ def generate_launch_description():
         name='ekf_filter_node',
         output='screen',
         parameters=[os.path.join(pkg_share, 'config/ekf.yaml'),
-                    {'use_sim_time': LaunchConfiguration('use_sim_time')}]
+                    {'use_sim_time': LaunchConfiguration('use_sim_time')}],
+        emulate_tty=True
     )
 
     return launch.LaunchDescription([
